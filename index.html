@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -212,7 +211,7 @@
             100% { transform: scale(1.5) translateY(-50px); opacity: 0; }
         }
 
-        /* --- Стили для Слайда 4 (Письмо на красивом фоне) --- */
+        /* --- Стили для Слайда 4 (Письмо) --- */
         .paper-sheet {
             position: relative;
             z-index: 1;
@@ -227,7 +226,6 @@
             text-align: left;
         }
 
-        /* Кастомный скроллбар для листа */
         .paper-sheet::-webkit-scrollbar {
             width: 6px;
         }
@@ -238,7 +236,7 @@
 
         .letter-blue-text {
             font-family: 'Caveat', cursive;
-            color: #cda1e6; /* Нежно-фиолетовый */
+            color: #cda1e6; 
             font-size: 18px;
             margin-bottom: 15px;
         }
@@ -293,7 +291,7 @@
 </head>
 <body>
 
-    <!-- СЛАЙД 1: Вопрос про драмтеатр -->
+    <!-- СЛАЙД 1: Вопрос -->
     <div class="slide-container active" id="slide1">
         <div class="title-text">Эта эмоция закрыта словом</div>
         <div class="subtitle-text">где мы познакомились?</div>
@@ -304,13 +302,13 @@
         <div class="error-msg" id="errorMsg">Неправильно, попробуй еще раз</div>
     </div>
 
-    <!-- СЛАЙД 2: Письмо Ане (появляется на 5 секунд) -->
+    <!-- СЛАЙД 2: Письмо Ане -->
     <div class="slide-container" id="slide2" style="justify-content: center; height: 100%;">
         <div class="letter-name">Аня,</div>
         <div class="letter-main-text">тебе письмо</div>
     </div>
 
-    <!-- СЛАЙД 3: Конверт (на звездном фоне) -->
+    <!-- СЛАЙД 3: Конверт -->
     <div class="slide-container star-bg" id="slide3">
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
             <svg class="envelope-img" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
@@ -332,7 +330,7 @@
         <div class="open-text">открой</div>
     </div>
 
-    <!-- СЛАЙД 4: Само письмо (Предыдущий текст на звездном фоне) -->
+    <!-- СЛАЙД 4: Текст письма -->
     <div class="slide-container star-bg" id="slide4">
         <div class="paper-sheet">
             <div class="letter-blue-text">это тебе, Аня</div>
@@ -343,20 +341,19 @@
                 <p>Аня.</p>
                 <p>Знаю, ты не хочешь со мной говорить.<br>На твоём месте я бы тоже не хотел.</p>
                 
-                <p>Я наговорил лишнего. Про Арсения и я знал что не прав.</p>
+                <p>Я наговорил лишнего. Про Арсения и я знал что не прав, и я знал это, когда говорил.</p>
                 
                 <p>Ты самый тёплый человек, которого я встречал. А я обидел тебя первым. Так нельзя.</p>
                 
                 <p>Прости меня. Не жду ответа сегодня. Просто больше не молчи. И если захочешь, выбери, как встретимся.</p>
             </div>
 
-            <!-- Место для фото -->
+            <!-- Вставка фото -->
             <div class="photo-placeholder">
-                <!-- Чтобы вставить фото, замените строку ниже на: <img src="имя_вашего_файла.jpg"> -->
-                <img src="we.jpg" >
+                <img src="we.jpg" alt="Наше фото">
             </div>
 
-            <div class="signature">Дима</div>
+            <div class="signature">Азиз</div>
         </div>
     </div>
 
@@ -365,7 +362,12 @@
         function checkAnswer() {
             const input = document.getElementById('answerInput').value.trim().toLowerCase();
             const errorMsg = document.getElementById('errorMsg');
-            const correctAnswers = ['драмтеатр', 'драм театр', 'драматический театр'];
+            
+            // ДОБАВИЛИ СЛАВЯНСКИЙ БАЗАР И ВАРИАНТЫ НАПИСАНИЯ
+            const correctAnswers = [
+                'драмтеатр', 'драм театр', 'драматический театр',
+                'славянский базар', 'славянский', 'базар'
+            ];
 
             if (correctAnswers.includes(input)) {
                 goToSlide(2);
