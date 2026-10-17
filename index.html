@@ -353,23 +353,32 @@
                 <img src="we.jpg" alt="Наше фото">
             </div>
 
+            <!-- Подпись изменена на Дима -->
             <div class="signature">Дима</div>
         </div>
     </div>
 
     <script>
-        // --- Логика 1 слайда ---
+        // --- Логика 1 слайда (с надежной проверкой) ---
         function checkAnswer() {
-            const input = document.getElementById('answerInput').value.trim().toLowerCase();
+            // Переводим в нижний регистр и убираем пробелы по краям
+            let input = document.getElementById('answerInput').value.toLowerCase().trim();
             const errorMsg = document.getElementById('errorMsg');
             
-            // ДОБАВИЛИ СЛАВЯНСКИЙ БАЗАР И ВАРИАНТЫ НАПИСАНИЯ
+            // Убираем все пробелы внутри строки для надежности (чтобы "драм театр" стало "драмтеатр")
+            let cleanInput = input.replace(/\s+/g, '');
+
+            // Список правильных ответов (без пробелов)
             const correctAnswers = [
-                'драмтеатр', 'драм театр', 'драматический театр',
-                'славянский базар', 'славянский', 'базар'
+                'драмтеатр', 
+                'драматическийтеатр',
+                'славянскийбазар', 
+                'славянский', 
+                'базар'
             ];
 
-            if (correctAnswers.includes(input)) {
+            // Проверяем: если чистый текст есть в списке ИЛИ содержит ключевые слова
+            if (correctAnswers.includes(cleanInput) || cleanInput.includes('славянский') || cleanInput.includes('драмтеатр')) {
                 goToSlide(2);
                 // Через 5 секунд автоматически переключаем на конверт
                 setTimeout(() => {
