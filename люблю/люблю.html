@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Секретное послание</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Caveat:wght@400;600&family=Montserrat:wght@400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #05070f;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .slide-container.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Стили для текста --- */
+        .title-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle-text {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            color: #d1d1d1;
+            margin-bottom: 40px;
+            transform: rotate(-2deg);
+        }
+
+        /* --- Стили для слайда 2 (Письмо Ане) --- */
+        .letter-name {
+            font-family: 'Caveat', cursive;
+            font-size: 32px;
+            color: #c9a7ff; 
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: fadeInText 1.5s ease-in-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .letter-main-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInText 1.5s ease-in-out forwards;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; filter: blur(5px); transform: translateY(5px); }
+            to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+
+        /* --- Стили для поля ввода и кнопок --- */
+        .input-field {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #2a2e3f;
+            border-radius: 20px;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        .input-field::placeholder {
+            color: #555;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        .input-field:focus {
+            border-color: #d1a55c;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #fce38a, #f3d064);
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(243, 208, 100, 0.2);
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 10px;
+            height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* --- Звездный фон (используется для слайдов 3 и 4) --- */
+        .star-bg {
+            background: radial-gradient(circle at top right, #2a1b4d, #05070f 70%);
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .star-bg::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            opacity: 0.6;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- Стили для Слайда 3: Конверт --- */
+        .envelope-wrapper {
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .envelope-wrapper:hover {
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+            transform: scale(1.05);
+        }
+
+        .envelope-img {
+            width: 280px;
+            height: auto;
+            display: block;
+        }
+
+        .open-text {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: #d1d1d1;
+            z-index: 1;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .envelope-wrapper.opening {
+            animation: flyAway 0.8s forwards;
+        }
+
+        @keyframes flyAway {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1.5) translateY(-50px); opacity: 0; }
+        }
+
+        /* --- Стили для Слайда 4 (Письмо на красивом фоне) --- */
+        .paper-sheet {
+            position: relative;
+            z-index: 1;
+            background-color: #fdfdfd;
+            border-radius: 15px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 360px;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        /* Кастомный скроллбар для листа */
+        .paper-sheet::-webkit-scrollbar {
+            width: 6px;
+        }
+        .paper-sheet::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 10px;
+        }
+
+        .letter-blue-text {
+            font-family: 'Caveat', cursive;
+            color: #cda1e6; /* Нежно-фиолетовый */
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .letter-title {
+            font-family: 'Cormorant Garamond', serif;
+            color: #222;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .letter-handwritten {
+            font-family: 'Caveat', cursive;
+            color: #333;
+            font-size: 19px;
+            line-height: 1.4;
+        }
+
+        .letter-handwritten p {
+            margin-bottom: 15px;
+            text-indent: 15px;
+        }
+
+        .photo-placeholder {
+            margin-top: 25px;
+            background-color: #eee;
+            height: 180px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #777;
+            font-family: sans-serif;
+            border: 2px dashed #bbb;
+            overflow: hidden;
+        }
+        
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .signature {
+            font-family: 'Caveat', cursive;
+            color: #888;
+            font-size: 22px;
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- СЛАЙД 1: Вопрос про драмтеатр -->
+    <div class="slide-container active" id="slide1">
+        <div class="title-text">Эта эмоция закрыта словом</div>
+        <div class="subtitle-text">где мы познакомились?</div>
+        
+        <input type="text" id="answerInput" class="input-field" placeholder="СЛОВО">
+        <button class="btn" onclick="checkAnswer()">Открыть</button>
+        
+        <div class="error-msg" id="errorMsg">Неправильно, попробуй еще раз</div>
+    </div>
+
+    <!-- СЛАЙД 2: Письмо Ане (появляется на 5 секунд) -->
+    <div class="slide-container" id="slide2" style="justify-content: center; height: 100%;">
+        <div class="letter-name">Аня,</div>
+        <div class="letter-main-text">тебе письмо</div>
+    </div>
+
+    <!-- СЛАЙД 3: Конверт (на звездном фоне) -->
+    <div class="slide-container star-bg" id="slide3">
+        <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <svg class="envelope-img" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="20" width="260" height="160" rx="10" fill="rgba(0,0,0,0.3)" />
+                <rect x="15" y="15" width="260" height="160" rx="10" fill="#f4f4f9" />
+                <path d="M15 25 L145 100 L275 25" fill="none" stroke="#dcdce6" stroke-width="2"/>
+                <path d="M15 15 L145 95 L275 15 Z" fill="#e8e8f0" />
+                
+                <circle cx="145" cy="95" r="22" fill="#7a42ab" stroke="#5c2e87" stroke-width="2"/>
+                <circle cx="145" cy="95" r="18" fill="none" stroke="#5c2e87" stroke-width="1" opacity="0.5"/>
+                <path d="M137 100 L145 82 L153 100 M140 94 L150 94" stroke="#d1b3ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <text x="145" y="145" font-family="'Caveat', cursive" font-size="28" fill="#333" text-anchor="middle" font-weight="bold">Аня</text>
+                
+                <circle cx="240" cy="145" r="18" fill="none" stroke="#aaa" stroke-width="1" />
+                <text x="240" y="149" font-family="'Montserrat', sans-serif" font-size="8" fill="#aaa" text-anchor="middle">sealed</text>
+            </svg>
+        </div>
+        <div class="open-text">открой</div>
+    </div>
+
+    <!-- СЛАЙД 4: Само письмо (Предыдущий текст на звездном фоне) -->
+    <div class="slide-container star-bg" id="slide4">
+        <div class="paper-sheet">
+            <div class="letter-blue-text">это тебе, Аня</div>
+            
+            <div class="letter-title">Для тебя</div>
+            
+            <div class="letter-handwritten">
+                <p>Аня.</p>
+                <p>Знаю, ты не хочешь со мной говорить.<br>На твоём месте я бы тоже не хотел.</p>
+                
+                <p>Я наговорил лишнего. Про Арсения и я знал что не прав.</p>
+                
+                <p>Ты самый тёплый человек, которого я встречал. А я обидел тебя первым. Так нельзя.</p>
+                
+                <p>Прости меня. Не жду ответа сегодня. Просто больше не молчи. И если захочешь, выбери, как встретимся.</p>
+            </div>
+
+            <!-- Место для фото -->
+            <div class="photo-placeholder">
+                <!-- Чтобы вставить фото, замените строку ниже на: <img src="имя_вашего_файла.jpg"> -->
+                <img src="мы.jpg" >
+            </div>
+
+            <div class="signature">Дима</div>
+        </div>
+    </div>
+
+    <script>
+        // --- Логика 1 слайда ---
+        function checkAnswer() {
+            const input = document.getElementById('answerInput').value.trim().toLowerCase();
+            const errorMsg = document.getElementById('errorMsg');
+            const correctAnswers = ['драмтеатр', 'драм театр', 'драматический театр'];
+
+            if (correctAnswers.includes(input)) {
+                goToSlide(2);
+                // Через 5 секунд автоматически переключаем на конверт
+                setTimeout(() => {
+                    goToSlide(3);
+                }, 5000); 
+            } else {
+                errorMsg.style.opacity = '1';
+                const inputEl = document.getElementById('answerInput');
+                inputEl.style.transform = 'translateX(5px)';
+                setTimeout(() => inputEl.style.transform = 'translateX(-5px)', 100);
+                setTimeout(() => inputEl.style.transform = 'translateX(0)', 200);
+                setTimeout(() => { errorMsg.style.opacity = '0'; }, 3000);
+            }
+        }
+
+        document.getElementById('answerInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        // --- Логика 3 слайда (Конверт) ---
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            envelope.classList.add('opening');
+            
+            setTimeout(() => {
+                goToSlide(4);
+                envelope.classList.remove('opening');
+            }, 800);
+        }
+
+        // --- Общая функция переключения слайдов ---
+        function goToSlide(slideNumber) {
+            document.querySelectorAll('.slide-container').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('slide' + slideNumber).classList.add('active');
+        }
+    </script>
+</body>
+</html>
