@@ -7,7 +7,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Caveat:wght@400;600&family=Montserrat:wght@400;600&display=swap');
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background-color: #05070f;
@@ -31,13 +35,16 @@
             animation: fadeIn 0.8s ease-in-out;
         }
 
-        .slide-container.active { display: flex; }
+        .slide-container.active {
+            display: flex;
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- Стили для текста --- */
         .title-text {
             font-family: 'Cormorant Garamond', serif;
             font-size: 24px;
@@ -54,6 +61,7 @@
             transform: rotate(-2deg);
         }
 
+        /* --- Стили для слайда 2 (Письмо Ане) --- */
         .letter-name {
             font-family: 'Caveat', cursive;
             font-size: 32px;
@@ -79,6 +87,7 @@
             to { opacity: 1; filter: blur(0); transform: translateY(0); }
         }
 
+        /* --- Стили для поля ввода и кнопок --- */
         .input-field {
             width: 100%;
             background: transparent;
@@ -100,7 +109,9 @@
             letter-spacing: 2px;
         }
 
-        .input-field:focus { border-color: #d1a55c; }
+        .input-field:focus {
+            border-color: #d1a55c;
+        }
 
         .btn {
             width: 100%;
@@ -116,7 +127,9 @@
             transition: transform 0.1s;
         }
 
-        .btn:active { transform: scale(0.98); }
+        .btn:active {
+            transform: scale(0.98);
+        }
 
         .error-msg {
             color: #ff6b6b;
@@ -127,6 +140,7 @@
             transition: opacity 0.3s;
         }
 
+        /* --- Звездный фон (используется для слайдов 3 и 4) --- */
         .star-bg {
             background: radial-gradient(circle at top right, #2a1b4d, #05070f 70%);
             position: relative;
@@ -152,6 +166,7 @@
             pointer-events: none;
         }
 
+        /* --- Стили для Слайда 3: Конверт --- */
         .envelope-wrapper {
             position: relative;
             z-index: 1;
@@ -165,7 +180,11 @@
             transform: scale(1.05);
         }
 
-        .envelope-img { width: 280px; height: auto; display: block; }
+        .envelope-img {
+            width: 280px;
+            height: auto;
+            display: block;
+        }
 
         .open-text {
             font-family: 'Caveat', cursive;
@@ -176,9 +195,15 @@
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
 
-        .envelope-wrapper.opening { animation: flyAway 0.8s forwards; }
+        .envelope-wrapper.opening {
+            animation: flyAway 0.8s forwards;
+        }
 
         @keyframes flyAway {
             0% { transform: scale(1); opacity: 1; }
@@ -186,6 +211,7 @@
             100% { transform: scale(1.5) translateY(-50px); opacity: 0; }
         }
 
+        /* --- Стили для Слайда 4 (Письмо) --- */
         .paper-sheet {
             position: relative;
             z-index: 1;
@@ -200,8 +226,13 @@
             text-align: left;
         }
 
-        .paper-sheet::-webkit-scrollbar { width: 6px; }
-        .paper-sheet::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 10px; }
+        .paper-sheet::-webkit-scrollbar {
+            width: 6px;
+        }
+        .paper-sheet::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 10px;
+        }
 
         .letter-blue-text {
             font-family: 'Caveat', cursive;
@@ -224,7 +255,10 @@
             line-height: 1.4;
         }
 
-        .letter-handwritten p { margin-bottom: 15px; text-indent: 15px; }
+        .letter-handwritten p {
+            margin-bottom: 15px;
+            text-indent: 15px;
+        }
 
         .photo-placeholder {
             margin-top: 25px;
@@ -240,7 +274,11 @@
             overflow: hidden;
         }
         
-        .photo-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         .signature {
             font-family: 'Caveat', cursive;
@@ -253,19 +291,24 @@
 </head>
 <body>
 
+    <!-- СЛАЙД 1: Вопрос -->
     <div class="slide-container active" id="slide1">
         <div class="title-text">Эта эмоция закрыта словом</div>
         <div class="subtitle-text">где мы познакомились?</div>
+        
         <input type="text" id="answerInput" class="input-field" placeholder="СЛОВО">
         <button class="btn" onclick="checkAnswer()">Открыть</button>
+        
         <div class="error-msg" id="errorMsg">Неправильно, попробуй еще раз</div>
     </div>
 
+    <!-- СЛАЙД 2: Письмо Ане -->
     <div class="slide-container" id="slide2" style="justify-content: center; height: 100%;">
         <div class="letter-name">Аня,</div>
         <div class="letter-main-text">тебе письмо</div>
     </div>
 
+    <!-- СЛАЙД 3: Конверт -->
     <div class="slide-container star-bg" id="slide3">
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
             <svg class="envelope-img" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
@@ -273,10 +316,13 @@
                 <rect x="15" y="15" width="260" height="160" rx="10" fill="#f4f4f9" />
                 <path d="M15 25 L145 100 L275 25" fill="none" stroke="#dcdce6" stroke-width="2"/>
                 <path d="M15 15 L145 95 L275 15 Z" fill="#e8e8f0" />
+                
                 <circle cx="145" cy="95" r="22" fill="#7a42ab" stroke="#5c2e87" stroke-width="2"/>
                 <circle cx="145" cy="95" r="18" fill="none" stroke="#5c2e87" stroke-width="1" opacity="0.5"/>
                 <path d="M137 100 L145 82 L153 100 M140 94 L150 94" stroke="#d1b3ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
                 <text x="145" y="145" font-family="'Caveat', cursive" font-size="28" fill="#333" text-anchor="middle" font-weight="bold">Аня</text>
+                
                 <circle cx="240" cy="145" r="18" fill="none" stroke="#aaa" stroke-width="1" />
                 <text x="240" y="149" font-family="'Montserrat', sans-serif" font-size="8" fill="#aaa" text-anchor="middle">sealed</text>
             </svg>
@@ -284,47 +330,51 @@
         <div class="open-text">открой</div>
     </div>
 
+    <!-- СЛАЙД 4: Текст письма -->
     <div class="slide-container star-bg" id="slide4">
         <div class="paper-sheet">
             <div class="letter-blue-text">это тебе, Аня</div>
+            
             <div class="letter-title">Для тебя</div>
+            
             <div class="letter-handwritten">
                 <p>Аня.</p>
                 <p>Знаю, ты не хочешь со мной говорить.<br>На твоём месте я бы тоже не хотел.</p>
+                
                 <p>Я наговорил лишнего. Про Арсения и я знал что не прав, и я знал это, когда говорил.</p>
+                
                 <p>Ты самый тёплый человек, которого я встречал. А я обидел тебя первым. Так нельзя.</p>
+                
                 <p>Прости меня. Не жду ответа сегодня. Просто больше не молчи. И если захочешь, выбери, как встретимся.</p>
             </div>
+
+            <!-- Вставка фото -->
             <div class="photo-placeholder">
                 <img src="we.jpg" alt="Наше фото">
             </div>
+
             <div class="signature">Азиз</div>
         </div>
     </div>
 
     <script>
-        // --- Логика 1 слайда (Умная проверка) ---
+        // --- Логика 1 слайда ---
         function checkAnswer() {
-            // Берем текст, переводим в нижний регистр и убираем лишние пробелы по краям
-            let input = document.getElementById('answerInput').value.toLowerCase().trim();
+            const input = document.getElementById('answerInput').value.trim().toLowerCase();
             const errorMsg = document.getElementById('errorMsg');
             
-            // Убираем все пробелы внутри строки для надежности (чтобы "драм театр" стало "драмтеатр")
-            let cleanInput = input.replace(/\s+/g, '');
-
-            // Список правильных ответов (без пробелов)
+            // ДОБАВИЛИ СЛАВЯНСКИЙ БАЗАР И ВАРИАНТЫ НАПИСАНИЯ
             const correctAnswers = [
-                'драмтеатр', 
-                'драматическийтеатр',
-                'славянскийбазар', 
-                'славянский', 
-                'базар'
+                'драмтеатр', 'драм театр', 'драматический театр',
+                'славянский базар', 'славянский', 'базар'
             ];
 
-            // Проверяем: если чистый текст есть в списке ИЛИ содержит ключевые слова
-            if (correctAnswers.includes(cleanInput) || cleanInput.includes('славянский') || cleanInput.includes('драмтеатр')) {
+            if (correctAnswers.includes(input)) {
                 goToSlide(2);
-                setTimeout(() => { goToSlide(3); }, 5000); 
+                // Через 5 секунд автоматически переключаем на конверт
+                setTimeout(() => {
+                    goToSlide(3);
+                }, 5000); 
             } else {
                 errorMsg.style.opacity = '1';
                 const inputEl = document.getElementById('answerInput');
@@ -343,6 +393,7 @@
         function openEnvelope() {
             const envelope = document.getElementById('envelope');
             envelope.classList.add('opening');
+            
             setTimeout(() => {
                 goToSlide(4);
                 envelope.classList.remove('opening');
