@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Приглашение на свидание</title>
+    <style>
+        :root {
+            --bg-top: #ffb326;
+            --bg-bottom: #e86b42;
+            --card-bg: rgba(255, 255, 255, 0.16);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text-main: #ffffff;
+            --btn-bg: #ffffff;
+            --btn-text: #d95d39;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(160deg, var(--bg-top) 0%, #f58d33 50%, var(--bg-bottom) 100%);
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--text-main);
+            position: relative;
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            bottom: -20px;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-105vh) scale(0.4); opacity: 0; }
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100dvh;
+            max-height: 850px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .screen {
+            position: absolute;
+            inset: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.92) translateY(20px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1) translateY(0);
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid var(--card-border);
+            border-radius: 32px;
+            padding: 28px 22px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(180, 60, 20, 0.25);
+            position: relative;
+        }
+
+        .cat-illustration {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 16px;
+            animation: catBounce 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+        }
+
+        @keyframes catBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        p.subtitle {
+            font-size: 15px;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        #screen-1 {
+            justify-content: space-between;
+            padding: 40px 0 30px;
+        }
+
+        .heart-wrapper {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .heart-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        .heart-glow {
+            position: absolute;
+            inset: -15px;
+            background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            animation: pulseGlow 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+
+        .heart-svg {
+            width: 140px;
+            height: 140px;
+            overflow: visible;
+        }
+
+        .hint-bottom {
+            font-size: 14px;
+            font-weight: 700;
+            opacity: 0.85;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: fadePulse 2s infinite;
+        }
+
+        @keyframes fadePulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .btn {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 999px;
+            padding: 15px 32px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .choice-buttons {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+            position: relative;
+        }
+
+        #btn-no {
+            background: rgba(255, 255, 255, 0.25);
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+        }
+
+        .input-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .custom-input-box {
+            background: rgba(255, 255, 255, 0.22);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 18px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .custom-input-box:focus-within {
+            background: rgba(255, 255, 255, 0.32);
+            transform: scale(1.02);
+        }
+
+        .custom-input-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            width: 100%;
+            outline: none;
+            color-scheme: dark;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+
+        .place-card {
+            background: rgba(255, 255, 255, 0.18);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 22px;
+            padding: 18px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .place-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .place-card.selected {
+            background: #ffffff;
+            color: var(--btn-text);
+            border-color: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .place-emoji {
+            font-size: 40px;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .place-card.selected .place-emoji {
+            transform: scale(1.2) rotate(-6deg);
+        }
+
+        .place-title {
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin: 18px 0;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 10px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-num {
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .time-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+
+        .summary-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .summary-item {
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 16px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            animation: slideInRight 0.5s backwards;
+        }
+
+        .summary-item:nth-child(1) { animation-delay: 0.1s; }
+        .summary-item:nth-child(2) { animation-delay: 0.2s; }
+        .summary-item:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .summary-icon {
+            font-size: 22px;
+        }
+
+        .summary-info small {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .summary-info strong {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .saved-badge {
+            font-size: 14px;
+            font-weight: 800;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            font-size: 24px;
+            animation: flyHeart 1.2s ease-out forwards;
+            z-index: 999;
+        }
+
+        @keyframes flyHeart {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(calc(-50% + var(--dx)), calc(-50% - 120px)) scale(1.4) rotate(var(--rot)); opacity: 0; }
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="particles" id="particles"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="app-container">
+        <!-- ЭКРАН 1: СЕРДЦЕ -->
+        <div class="screen active" id="screen-1">
+            <div style="text-align: center; margin-top: 20px;">
+                <h1>Всё начинается<br>с тепла</h1>
+                <p class="subtitle">Коснись сердечка и подержи</p>
+            </div>
+
+            <div class="heart-wrapper" id="heart-btn">
+                <div class="heart-glow"></div>
+                <svg class="heart-svg" viewBox="0 0 100 100">
+                    <defs>
+                        <clipPath id="heart-clip">
+                            <path d="M50 88.9C48.5 88.9 47.1 88.4 45.9 87.4C31.2 74.8 10 55.4 10 34.5C10 20.5 21 9.5 34.5 9.5C41.8 9.5 48.6 12.8 50 18.2C51.4 12.8 58.2 9.5 65.5 9.5C79 9.5 90 20.5 90 34.5C90 55.4 68.8 74.8 54.1 87.4C52.9 88.4 51.5 88.9 50 88.9Z"/>
+                        </clipPath>
+                        <linearGradient id="fill-grad" x1="0" y1="1" x2="0" y2="0">
+                            <stop offset="0%" stop-color="#ff4b6e"/>
+                            <stop offset="100%" stop-color="#ff859d"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M50 88.9C48.5 88.9 47.1 88.4 45.9 87.4C31.2 74.8 10 55.4 10 34.5C10 20.5 21 9.5 34.5 9.5C41.8 9.5 48.6 12.8 50 18.2C51.4 12.8 58.2 9.5 65.5 9.5C79 9.5 90 20.5 90 34.5C90 55.4 68.8 74.8 54.1 87.4C52.9 88.4 51.5 88.9 50 88.9Z" fill="rgba(255,255,255,0.28)" stroke="rgba(255,255,255,0.65)" stroke-width="2.5"/>
+                    <g clip-path="url(#heart-clip)">
+                        <rect id="heart-fill-rect" x="0" y="100" width="100" height="100" fill="url(#fill-grad)"/>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="hint-bottom">Открыть приглашение 💌</div>
+        </div>
+
+        <!-- ЭКРАН 2: ПРИГЛАШЕНИЕ -->
+        <div class="screen" id="screen-2">
+            <div class="glass-card">
+               <img src="cat1.png" class="cat-illustration" alt="">
+
+                <h1>Пойдёшь со мной на свидание?</h1>
+                <p class="subtitle">Обещаю, будет очень здорово ✨</p>
+
+                <div class="choice-buttons">
+                    <button class="btn" id="btn-yes">Да! 😍</button>
+                    <button class="btn" id="btn-no">Нет</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 3: ПОДТВЕРЖДЕНИЕ -->
+        <div class="screen" id="screen-3">
+            <div class="glass-card">
+                <img src="cat2.png" class="cat-illustration" alt="">
+
+                <h1>Подожди, ты действительно сказала «да»? 🥹</h1>
+                
+
+                <button class="btn" id="btn-yes-again">Да, да! 💖</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 4: ДАТА И ВРЕМЯ -->
+        <div class="screen" id="screen-4">
+            <div class="glass-card">
+                <img src="cat3.png" class="cat-illustration" alt="">
+
+                <h1>Когда тебе удобно? 🗓️</h1>
+                <p class="subtitle">Выбери идеальный день и время</p>
+
+                <div class="input-group">
+                    <div class="custom-input-box">
+                        <input type="date" id="date-input">
+                    </div>
+                    <div class="custom-input-box">
+                        <input type="time" id="time-input" value="19:00">
+                    </div>
+                </div>
+
+                <button class="btn" id="btn-confirm-time">Подтвердить 💫</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 5: ВЫБОР МЕСТА -->
+        <div class="screen" id="screen-5">
+            <div class="glass-card">
+                <h1>Чем займёмся? 😊</h1>
+                <p class="subtitle">Выбирай, что по душе</p>
+
+                <div class="places-grid">
+                    <div class="place-card selected" data-place="Кино" data-emoji="🎬">
+                        <div class="place-emoji">🎬</div>
+                        <div class="place-title">Кино</div>
+                    </div>
+                    <div class="place-card" data-place="Боулинг" data-emoji="🎳">
+                        <div class="place-emoji">🎳</div>
+                        <div class="place-title">Боулинг</div>
+                    </div>
+                    <div class="place-card" data-place="Каток" data-emoji="⛸️">
+                        <div class="place-emoji">⛸️</div>
+                        <div class="place-title">Каток</div>
+                    </div>
+                    <div class="place-card" data-place="Кафешка" data-emoji="☕">
+                        <div class="place-emoji">☕</div>
+                        <div class="place-title">Кафешка</div>
+                    </div>
+                </div>
+
+                <button class="btn" id="btn-to-final">Дальше →</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 6: ФИНАЛ -->
+        <div class="screen" id="screen-6">
+            <div class="glass-card">
+                 
+	 <img src="cat4.png" class="cat-illustration" style="height: 95px; margin-bottom: 10px;" alt="">
+
+
+                <h1 style="font-size: 24px;">Ура! Это свидание 💛</h1>
+                <p class="subtitle" id="final-subtext" style="margin-bottom: 10px; font-size: 13.5px;"></p>
+
+                <div class="countdown-grid">
+                    <div class="time-box">
+                        <span class="time-num" id="cd-days">0</span>
+                        <span class="time-label">Дней</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="time-num" id="cd-hours">0</span>
+                        <span class="time-label">Часов</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="time-num" id="cd-mins">0</span>
+                        <span class="time-label">Минут</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="time-num" id="cd-secs">0</span>
+                        <span class="time-label">Секунд</span>
+                    </div>
+                </div>
+
+                <div class="summary-list">
+                    <div class="summary-item">
+                        <div class="summary-icon">📅</div>
+                        <div class="summary-info">
+                            <small>Когда</small>
+                            <strong id="sum-date"></strong>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-icon">⏰</div>
+                        <div class="summary-info">
+                            <small>Во сколько</small>
+                            <strong id="sum-time"></strong>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-icon" id="sum-place-emoji">🎬</div>
+                        <div class="summary-info">
+                            <small>Что</small>
+                            <strong id="sum-place">Кино</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="saved-badge">Ответ сохранён ✓</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 8 + 4;
+            p.style.width = `${size}px`;
+            p.style.height = `${size}px`;
+            p.style.left = `${Math.random() * 100}%`;
+            p.style.animationDuration = `${Math.random() * 6 + 6}s`;
+            p.style.animationDelay = `${Math.random() * 5}s`;
+            particlesContainer.appendChild(p);
+        }
+
+        function goToScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${num}`).classList.add('active');
+        }
+
+        function spawnHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerText = ['❤️', '🧡', '💖', '✨'][Math.floor(Math.random() * 4)];
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            heart.style.setProperty('--dx', `${(Math.random() - 0.5) * 100}px`);
+            heart.style.setProperty('--rot', `${(Math.random() - 0.5) * 60}deg`);
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1200);
+        }
+
+        const heartBtn = document.getElementById('heart-btn');
+        const heartFillRect = document.getElementById('heart-fill-rect');
+        let fillLevel = 0;
+        let isHolding = false;
+        let heartCompleted = false;
+
+        function updateHeartFill() {
+            if (heartCompleted) return;
+            if (isHolding) {
+                fillLevel += 2.2;
+                if (Math.random() > 0.75) {
+                    const rect = heartBtn.getBoundingClientRect();
+                    spawnHeart(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                }
+            } else if (fillLevel > 0) {
+                fillLevel -= 0.8;
+            }
+            fillLevel = Math.max(0, Math.min(100, fillLevel));
+            heartFillRect.setAttribute('y', 100 - fillLevel);
+
+            if (fillLevel >= 100 && !heartCompleted) {
+                heartCompleted = true;
+                if (navigator.vibrate) navigator.vibrate(50);
+                for (let i = 0; i < 12; i++) {
+                    const rect = heartBtn.getBoundingClientRect();
+                    spawnHeart(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                }
+                setTimeout(() => goToScreen(2), 450);
+            } else {
+                requestAnimationFrame(updateHeartFill);
+            }
+        }
+        requestAnimationFrame(updateHeartFill);
+
+        heartBtn.addEventListener('pointerdown', (e) => {
+            isHolding = true;
+            fillLevel += 15;
+            spawnHeart(e.clientX, e.clientY);
+        });
+        window.addEventListener('pointerup', () => isHolding = false);
+        window.addEventListener('pointercancel', () => isHolding = false);
+
+        const btnNo = document.getElementById('btn-no');
+        const btnYes = document.getElementById('btn-yes');
+        let yesScale = 1;
+
+        function moveNoButton(e) {
+            if (e) e.preventDefault();
+            if (navigator.vibrate) navigator.vibrate(25);
+
+            yesScale = Math.min(yesScale + 0.08, 1.45);
+            btnYes.style.transform = `scale(${yesScale})`;
+
+            const maxX = window.innerWidth - btnNo.offsetWidth - 40;
+            const maxY = window.innerHeight - btnNo.offsetHeight - 40;
+            const randX = Math.max(20, Math.floor(Math.random() * maxX));
+            const randY = Math.max(20, Math.floor(Math.random() * maxY));
+
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = `${randX}px`;
+            btnNo.style.top = `${randY}px`;
+            btnNo.style.transform = `rotate(${(Math.random() - 0.5) * 30}deg)`;
+        }
+
+        btnNo.addEventListener('mouseover', moveNoButton);
+        btnNo.addEventListener('touchstart', moveNoButton, { passive: false });
+        btnNo.addEventListener('click', moveNoButton);
+
+        btnYes.addEventListener('click', (e) => {
+            btnNo.style.display = 'none';
+            spawnHeart(e.clientX, e.clientY);
+            goToScreen(3);
+        });
+
+        document.getElementById('btn-yes-again').addEventListener('click', (e) => {
+            spawnHeart(e.clientX, e.clientY);
+            goToScreen(4);
+        });
+
+        const dateInput = document.getElementById('date-input');
+        const timeInput = document.getElementById('time-input');
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.value = tomorrow.toISOString().split('T')[0];
+
+        document.getElementById('btn-confirm-time').addEventListener('click', (e) => {
+            if (!dateInput.value) {
+                dateInput.focus();
+                return;
+            }
+            spawnHeart(e.clientX, e.clientY);
+            goToScreen(5);
+        });
+
+        let selectedPlace = 'Кино';
+        let selectedEmoji = '🎬';
+
+        document.querySelectorAll('.place-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                document.querySelectorAll('.place-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedPlace = card.dataset.place;
+                selectedEmoji = card.dataset.emoji;
+                spawnHeart(e.clientX, e.clientY);
+            });
+        });
+
+        let countdownInterval;
+
+        document.getElementById('btn-to-final').addEventListener('click', () => {
+            const rawDate = dateInput.value;
+            const rawTime = timeInput.value || '19:00';
+
+            const dateObj = new Date(`${rawDate}T${rawTime}`);
+            const formattedDate = dateObj.toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }).replace(' г.', '');
+
+            document.getElementById('sum-date').innerText = formattedDate;
+            document.getElementById('sum-time').innerText = rawTime;
+            document.getElementById('sum-place').innerText = selectedPlace;
+            document.getElementById('sum-place-emoji').innerText = selectedEmoji;
+            document.getElementById('final-subtext').innerText = 
+                `Жду тебя ${formattedDate} в ${rawTime}. Нас ждёт ${selectedPlace} 💫`;
+
+            goToScreen(6);
+            launchConfetti();
+
+            clearInterval(countdownInterval);
+            function updateCountdown() {
+                const now = new Date();
+                const diff = dateObj - now;
+
+                if (diff <= 0) {
+                    document.getElementById('cd-days').innerText = '0';
+                    document.getElementById('cd-hours').innerText = '0';
+                    document.getElementById('cd-mins').innerText = '0';
+                    document.getElementById('cd-secs').innerText = '0';
+                    return;
+                }
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((diff / 1000 / 60) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+
+                document.getElementById('cd-days').innerText = d;
+                document.getElementById('cd-hours').innerText = h;
+                document.getElementById('cd-mins').innerText = m;
+                document.getElementById('cd-secs').innerText = s;
+            }
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        });
+
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const pieces = [];
+            const colors = ['#ffffff', '#ffe066', '#ff6b8b', '#a8d5ff', '#ffd166'];
+
+            for (let i = 0; i < 120; i++) {
+                pieces.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 18,
+                    vy: (Math.random() - 0.7) * 18,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rot: Math.random() * 360,
+                    vRot: (Math.random() - 0.5) * 10
+                });
+            }
+
+            let frame = 0;
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.35;
+                    p.vx *= 0.98;
+                    p.rot += p.vRot;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rot * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                    ctx.restore();
+                });
+
+                frame++;
+                if (frame < 160) {
+                    requestAnimationFrame(animateConfetti);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            animateConfetti();
+        }
+    </script>
+</body>
+</html>
